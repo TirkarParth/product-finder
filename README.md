@@ -2,12 +2,13 @@
 
 Search for products and browse matching results with prices, ratings, and outbound links.
 
+Live site (GitHub Pages): https://tirkarparth.github.io/product-finder/
+
 ## Features
 
 - Fast search UI for product queries
-- `/api/products?q=...` backend route
-- Live Google Shopping results when `SERPAPI_API_KEY` is set
-- Public catalog fallback so the app works without an API key
+- Product catalog search over the public web API at DummyJSON
+- Static site ready for GitHub Pages (no server required)
 
 ## Getting started
 
@@ -18,24 +19,18 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000).
 
-## Optional live shopping search
-
-Copy `.env.example` to `.env.local` and add a [SerpAPI](https://serpapi.com/) key:
+## Build locally
 
 ```bash
-cp .env.example .env.local
+npm run build
 ```
 
-```env
-SERPAPI_API_KEY=your_key_here
-```
+Static files are written to the `out/` folder.
 
-Without a key, Findr searches a public demo product catalog.
+## Deploy with GitHub Pages
 
-## Deploy
+Pushing to `main` runs [.github/workflows/deploy-pages.yml](.github/workflows/deploy-pages.yml), which builds the static export and publishes it to GitHub Pages.
 
-```bash
-npx vercel
-```
+Site URL pattern:
 
-Add `SERPAPI_API_KEY` in the Vercel project environment variables if you want live shopping results in production.
+`https://<your-github-username>.github.io/product-finder/`

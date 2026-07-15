@@ -78,9 +78,7 @@ export function ProductResults({
           </h2>
           <p className="mt-1 text-sm text-muted">
             {products.length} product{products.length === 1 ? "" : "s"} found
-            {source === "serpapi"
-              ? " via live shopping search"
-              : " from the demo product catalog"}
+            {source ? " from online product listings" : ""}
           </p>
         </div>
       </div>

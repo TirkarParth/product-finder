@@ -2,7 +2,8 @@
 
 import { ProductResults } from "@/components/ProductResults";
 import { SearchForm } from "@/components/SearchForm";
-import type { Product, ProductSearchResponse } from "@/lib/types";
+import { searchCatalog } from "@/lib/search-catalog";
+import type { Product } from "@/lib/types";
 import { useState } from "react";
 
 export default function Home() {
@@ -20,17 +21,7 @@ export default function Home() {
     setError(null);
 
     try {
-      const response = await fetch(
-        `/api/products?q=${encodeURIComponent(nextQuery)}`,
-      );
-      const data = (await response.json()) as ProductSearchResponse & {
-        error?: string;
-      };
-
-      if (!response.ok) {
-        throw new Error(data.error || "Something went wrong while searching.");
-      }
-
+      const data = await searchCatalog(nextQuery);
       setProducts(data.products);
       setSource(data.source);
     } catch (searchError) {
