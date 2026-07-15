@@ -2,7 +2,9 @@
 
 Search for products and browse matching results with prices, ratings, and outbound links.
 
-Live site (GitHub Pages): https://tirkarparth.github.io/product-finder/
+Live site (Netlify): https://findr-product-search.netlify.app
+
+GitHub Pages mirror: https://tirkarparth.github.io/product-finder/
 
 ## Features
 
