@@ -1,15 +1,49 @@
 "use client";
 
+import { ProductResults } from "@/components/ProductResults";
 import { SearchForm } from "@/components/SearchForm";
+import type { Product, ProductSearchResponse } from "@/lib/types";
 import { useState } from "react";
 
 export default function Home() {
   const [query, setQuery] = useState("");
+  const [products, setProducts] = useState<Product[]>([]);
+  const [source, setSource] = useState<"serpapi" | "catalog" | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [hasSearched, setHasSearched] = useState(false);
 
-  function handleSearch(nextQuery: string) {
+  async function handleSearch(nextQuery: string) {
     setQuery(nextQuery);
     setHasSearched(true);
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const response = await fetch(
+        `/api/products?q=${encodeURIComponent(nextQuery)}`,
+      );
+      const data = (await response.json()) as ProductSearchResponse & {
+        error?: string;
+      };
+
+      if (!response.ok) {
+        throw new Error(data.error || "Something went wrong while searching.");
+      }
+
+      setProducts(data.products);
+      setSource(data.source);
+    } catch (searchError) {
+      setProducts([]);
+      setSource(null);
+      setError(
+        searchError instanceof Error
+          ? searchError.message
+          : "Something went wrong while searching.",
+      );
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   return (
@@ -32,24 +66,27 @@ export default function Home() {
           </p>
 
           <div className="mt-10">
-            <SearchForm initialQuery={query} onSearch={handleSearch} />
+            <SearchForm
+              initialQuery={query}
+              onSearch={handleSearch}
+              isLoading={isLoading}
+            />
           </div>
         </section>
 
-        <section className="animate-rise-delay-2 mx-auto mt-14 w-full max-w-3xl">
+        <section className="animate-rise-delay-2 mx-auto mt-14 w-full">
           {!hasSearched ? (
             <p className="text-center text-sm text-muted">
               Suggestions: laptop stand · trail running shoes · cast iron skillet
             </p>
           ) : (
-            <div className="rounded-2xl border border-dashed border-border bg-surface px-6 py-10 text-center">
-              <p className="font-[family-name:var(--font-syne)] text-lg font-semibold text-brand">
-                Ready for “{query}”
-              </p>
-              <p className="mt-2 text-sm text-muted">
-                Product results will appear here once search is connected.
-              </p>
-            </div>
+            <ProductResults
+              query={query}
+              products={products}
+              source={source}
+              isLoading={isLoading}
+              error={error}
+            />
           )}
         </section>
       </main>
