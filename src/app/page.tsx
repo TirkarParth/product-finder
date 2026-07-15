@@ -2,7 +2,7 @@
 
 import { ProductResults } from "@/components/ProductResults";
 import { SearchForm } from "@/components/SearchForm";
-import { searchCatalog } from "@/lib/search-catalog";
+import { searchProducts } from "@/lib/search-products";
 import type { Product } from "@/lib/types";
 import { useState } from "react";
 
@@ -21,7 +21,7 @@ export default function Home() {
     setError(null);
 
     try {
-      const data = await searchCatalog(nextQuery);
+      const data = await searchProducts(nextQuery);
       setProducts(data.products);
       setSource(data.source);
     } catch (searchError) {

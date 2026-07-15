@@ -78,7 +78,11 @@ export function ProductResults({
           </h2>
           <p className="mt-1 text-sm text-muted">
             {products.length} product{products.length === 1 ? "" : "s"} found
-            {source ? " from online product listings" : ""}
+            {source === "serpapi"
+              ? " via live Google Shopping search"
+              : source === "catalog"
+                ? " from the demo catalog (add SERPAPI_API_KEY on Netlify for real products)"
+                : ""}
           </p>
         </div>
       </div>
